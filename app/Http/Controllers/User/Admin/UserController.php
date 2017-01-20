@@ -39,7 +39,7 @@ class UserController extends Controller
         if ($validator->fails())
         {
             $errorInfo = $validator->errors()->all();
-            $data['info'] = $errorInfo;
+            $data['info'] = $errorInfo[0];
             return view('user.login')->with('data',$data);
         }
 
@@ -102,12 +102,22 @@ class UserController extends Controller
         if ($validator->fails())
         {
             $errorInfo = $validator->errors()->all();
-            $data['info'] = $errorInfo;
+            $data['info'] = $errorInfo[0];
             return view('user.register')->with('data',$data);
         }
+        $user = new UserModel();
 
         //验证成功,接收数据
         $email = $request->input('email');
+        $where = array(
+            ['email','=',$email]
+        );
+        $res = $user->get($where);
+        if($res)
+        {
+            $data['info'] = '邮箱已存在';
+            return view('user.register')->with('data',$data);
+        }
         $password = $request->input('password');
         $name = $request->input('name');
         //将数据组装，调用模型方法
@@ -118,7 +128,7 @@ class UserController extends Controller
             'created_at'=>time(),
         ];
 
-        $res = (new UserModel())->insert($option);
+        $res = $user->insert($option);
         //成功return view('user.login'),并带回提示信息;
         $data['res'] = $res[0];
         if($res)
@@ -154,7 +164,7 @@ class UserController extends Controller
         if ($validator->fails())
         {
             $errorInfo = $validator->errors()->all();
-            $data['info'] = $errorInfo;
+            $data['info'] = $errorInfo[0];
             return view('user.find-password')->with('data',$data);
         }
 
@@ -218,7 +228,7 @@ class UserController extends Controller
         if ($validator->fails())
         {
             $errorInfo = $validator->errors()->all();
-            $data['info'] = $errorInfo;
+            $data['info'] = $errorInfo[0];
             return view('user.find-password')->with('data',$data);
         }
 
@@ -268,7 +278,7 @@ class UserController extends Controller
         if ($validator->fails())
         {
             $errorInfo = $validator->errors()->all();
-            $data['info'] = $errorInfo;
+            $data['info'] = $errorInfo[0];
             return view('user.reset-password')->with('data',$data);
         }
 
