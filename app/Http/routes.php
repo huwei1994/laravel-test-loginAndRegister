@@ -30,8 +30,10 @@ Route::group(['namespace' => 'User', 'prefix' => 'user'], function()
         Route::get('find-password-form','UserController@findPasswordForm');
         //6：填写邮箱过后，点击找回密码，后台处理函数，并发送邮件链接(成功发送邮件，并提示信息，失败也提示信息)
         Route::post('find-password','UserController@findPassword');
-        //7：收到邮件，点击邮件链接的处理函数(成功，跳转到登录界面，失败返5中的填写邮箱页面，并提示信息)
+        //7：收到邮件，点击邮件链接的处理函数(成功，跳转到重置密码页面，失败返5中的填写邮箱页面，并提示信息)
+        Route::get('reset-password-form','UserController@resetPasswordForm');
+        //8：点击重置密码按钮后台处理函数(成功，跳转到登录界面，失败返5中的重置密码页面，并提示信息)
         Route::post('reset-password','UserController@resetPassword');
     });
 });
-
+Route::get('/hh','User\Admin\UserController@hh');
